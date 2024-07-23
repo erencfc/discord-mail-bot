@@ -48,18 +48,18 @@ export async function getRuleByMail(mail: string): Promise<TRule | undefined> {
     return rules.find((rule) => rule.matchers[0].value === mail);
 }
 
-export async function createRule(mail: string): Promise<TRule | TError> {
+export async function createRule(mail: string): Promise<TRule> {
     const options: AxiosRequestConfig = {
         url,
         headers,
         method: "POST",
         data: {
             enabled: true,
-            actions: [
-                { type: "forward", value: [process.env.FORWARDING_EMAIL] },
-            ],
+            actions: [{ type: "worker", value: ["email-worker"] }],
             matchers: [{ field: "to", type: "literal", value: mail }],
-            name: `Rule created at ${new Date().toISOString()}`,
+            name: `Rule created at ${new Date().toLocaleString(
+                "tr-TR"
+            )}: ${mail}`,
             priority: 0,
         },
     };
